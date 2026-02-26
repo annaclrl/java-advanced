@@ -15,24 +15,24 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    private Produto create(Produto produto){
+    public Produto create(Produto produto){
         return produtoRepository.save(produto);
     }
 
-    private Produto read(UUID id) {
+    public Produto read(UUID id) {
         Optional<Produto> produto = produtoRepository.findById(id);
         return produto.orElse(null);
     }
 
-    private List<Produto> readAll(){
+    public List<Produto> readAll(){
         return produtoRepository.findAll();
     }
 
-    private Produto update(Produto produto){
+    public Produto update(Produto produto){
         return produtoRepository.save(produto);
     }
 
-    private void delete(UUID id){
+    public void delete(UUID id){
         produtoRepository.deleteById(id);
     }
 }
