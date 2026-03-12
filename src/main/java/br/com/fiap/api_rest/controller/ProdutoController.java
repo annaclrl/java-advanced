@@ -1,7 +1,7 @@
 package br.com.fiap.api_rest.controller;
 
-
 import br.com.fiap.api_rest.dto.ProdutoRequest;
+import br.com.fiap.api_rest.dto.ProdutoResponse;
 import br.com.fiap.api_rest.model.Produto;
 import br.com.fiap.api_rest.service.ProdutoService;
 import jakarta.validation.Valid;
@@ -17,51 +17,49 @@ import java.util.UUID;
 @RequestMapping("/produtos")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
+
+    public ProdutoController(ProdutoService produtoService){
+        this.produtoService = produtoService;
+    }
 
     @PostMapping
-    public ResponseEntity<Produto> createProduto(@Valid @RequestBody ProdutoRequest produto){
+    public ResponseEntity<Produto> createProduto(@Valid @RequestBody ProdutoRequest produto) {
         Produto produtoSalvo = produtoService.create(produto);
         return new ResponseEntity<>(produtoSalvo, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> readProduto(@PathVariable UUID id ){
-        Produto produto = produtoService.read(id);
-        if(produto == null){
-            return new ResponseEntity<>(produto, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ProdutoResponse> readProduto(@PathVariable UUID id) {
+        ProdutoResponse produto = produtoService.read(id);
+        if (produto == null) {
+            return new ResponseEntity<>(produto, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(produto, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> readProduto(){
-        List<Produto> produtos = produtoService.readAll();
-        if(produtos.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<ProdutoResponse>> readAll() {
+        List<ProdutoResponse> produtos = produtoService.readAll();
+        if (produtos.isEmpty()) {
+            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(produtos, HttpStatus.OK);
+        return new ResponseEntity<>(produtoService.readAll(), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Produto> updateProduto( @RequestBody Produto produto){
-        Produto produtoExistente = produtoService.read(produto.getId());
-        if(produtoExistente == null){
+    public ResponseEntity<Produto> updateProduto(@RequestBody Produto produto) {
+        ProdutoResponse produtoExistente = produtoService.read(produto.getId());
+        if (produtoExistente == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Produto produtoAtualizado = produtoService.update(produto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(produtoAtualizado, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduto(@PathVariable UUID id){
+    public ResponseEntity<Void> deleteProduto(@PathVariable UUID id) {
         produtoService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
-
-
 }
