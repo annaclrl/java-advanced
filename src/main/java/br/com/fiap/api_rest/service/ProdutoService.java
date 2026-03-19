@@ -6,12 +6,12 @@ import br.com.fiap.api_rest.mapper.ProdutoMapper;
 import br.com.fiap.api_rest.model.Produto;
 import br.com.fiap.api_rest.repository.ProdutoRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
@@ -30,6 +30,7 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
+
     public ProdutoResponse read(UUID id) {
         Optional<Produto> produto = produtoRepository.findById(id);
         if(produto.isEmpty()){
@@ -38,12 +39,11 @@ public class ProdutoService {
         return produtoMapper.produtoToResponse(produto.get());
     }
 
-    public List<ProdutoResponse> readAll(){
-        List<Produto> produtos = produtoRepository.findAll();
-        return produtos
-                .stream()
-                .map(produtoMapper::produtoToResponse)
-                .collect(Collectors.toList());
+    //Page, Pageable
+    public Page<ProdutoResponse> readAll(Pageable peageable){
+        return produtoRepository
+                .findAll(peageable)
+                .map(produtoMapper::produtoToResponse);
     }
 
     public Produto update(Produto produto){

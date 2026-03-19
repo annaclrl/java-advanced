@@ -5,12 +5,14 @@ import br.com.fiap.api_rest.dto.ProdutoResponse;
 import br.com.fiap.api_rest.model.Produto;
 import br.com.fiap.api_rest.service.ProdutoService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,12 +41,13 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponse>> readAll() {
-        List<ProdutoResponse> produtos = produtoService.readAll();
+    public ResponseEntity<Page<ProdutoResponse>> readAll(@RequestParam(defaultValue = "0") Integer pageNumber) {
+        Pageable peageable = PageRequest .of(pageNumber,2, Sort.by("nome").ascending());
+        Page<ProdutoResponse> produtos = produtoService.readAll(peageable);
         if (produtos.isEmpty()) {
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(produtoService.readAll(), HttpStatus.OK);
+        return new ResponseEntity<>(produtos, HttpStatus.OK);
     }
 
     @PutMapping
