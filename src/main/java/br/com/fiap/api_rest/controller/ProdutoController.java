@@ -1,5 +1,6 @@
 package br.com.fiap.api_rest.controller;
 
+import br.com.fiap.api_rest.dto.ProdutoLista;
 import br.com.fiap.api_rest.dto.ProdutoRequest;
 import br.com.fiap.api_rest.dto.ProdutoResponse;
 import br.com.fiap.api_rest.model.Produto;
@@ -18,10 +19,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
-
     private final ProdutoService produtoService;
 
-    public ProdutoController(ProdutoService produtoService){
+    public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
@@ -41,9 +41,10 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProdutoResponse>> readAll(@RequestParam(defaultValue = "0") Integer pageNumber) {
-        Pageable peageable = PageRequest .of(pageNumber,2, Sort.by("nome").ascending());
-        Page<ProdutoResponse> produtos = produtoService.readAll(peageable);
+    public ResponseEntity<Page<ProdutoLista>> readProduto(@RequestParam(defaultValue = "0") Integer pageNumber) {
+        // page number, page size, sort
+        Pageable pageable = PageRequest.of(pageNumber, 2, Sort.by("nome").ascending());
+        Page<ProdutoLista> produtos = produtoService.read(pageable);
         if (produtos.isEmpty()) {
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
