@@ -33,7 +33,7 @@ public class Produto {
         this.expiracao = expiracao;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
