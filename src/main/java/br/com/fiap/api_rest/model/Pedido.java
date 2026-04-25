@@ -30,8 +30,8 @@ public class Pedido {
     private Cliente cliente;
     @ManyToMany
     @JoinTable(name = "produto_pedido",
-            joinColumns = @JoinColumn(name = "id_produto", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_pedido", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido"),
+            inverseJoinColumns = @JoinColumn(name = "id_produto", referencedColumnName = "id_produto"))
     private List<Produto> produtos;
 
     public UUID getId() {
