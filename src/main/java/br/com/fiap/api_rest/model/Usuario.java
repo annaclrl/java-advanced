@@ -1,10 +1,12 @@
 package br.com.fiap.api_rest.model;
 
+import br.com.fiap.api_rest.dto.RegisterDTO;
 import br.com.fiap.api_rest.model.enums.UserRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.Valid;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,6 +34,15 @@ public class Usuario implements UserDetails {
         }else{
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
+    }
+
+    public Usuario(String login, String encryptedPassword, @Valid RegisterDTO registerDTO, UserRole role) {
+    }
+
+    public Usuario(String login, String senha, String role) {
+        this.login = login;
+        this.senha = senha;
+        this.role = role;
     }
 
     @Override
